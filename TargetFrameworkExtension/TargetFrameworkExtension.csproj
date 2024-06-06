@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net8.0-desktop;net8.0-browserwasm;net8.0-ios;net8.0-android</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="Packages\**\*.*" Pack="True" PackagePath="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<Import Project="../file-extension.targets" />
+	<Import Project="../targetframework-extension.targets" />
+	<Import Project="../build-extension.targets" />
+	<!--<Import Project="../build2-extension.targets" />-->
+
+</Project>

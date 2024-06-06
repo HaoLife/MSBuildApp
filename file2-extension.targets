@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	
+	<ItemGroup>
+
+		<None Include="**\*.desktop.cs" Exclude="bin\**\*.desktop.cs;obj\**\*.desktop.cs" Condition="$(UnoRuntimeIdentifier)!='desktop'"  />
+		<Compile Remove="**\*.desktop.cs" Condition="$(UnoRuntimeIdentifier)!='Skia'"  />
+		
+		<None Include="**\*.browserwasm.cs" Exclude="bin\**\*.browserwasm.cs;obj\**\*.browserwasm.cs" Condition="$(UnoRuntimeIdentifier)!='browserwasm'" />
+		<Compile Remove="**\*.browserwasm.cs"  Condition="$(UnoRuntimeIdentifier)!='WebAssembly'"  />
+
+		<None Include="**\*.ios.cs" Exclude="bin\**\*.ios.cs;obj\**\*.ios.cs" />
+		<Compile Remove="**\*.ios.cs" />
+
+		<None Include="**\*.android.cs" Exclude="bin\**\*.android.cs;obj\**\*.android.cs" />
+		<Compile Remove="**\*.android.cs" />
+	</ItemGroup>
+
+	<Target Name="ttt" AfterTargets="Build" Condition="$(UnoRuntimeIdentifier)!='desktop'"  >
+
+
+		<Message Text="msbuild !desktop $(MSBuildProjectFullPath) ==== $(UnoRuntimeIdentifier) " Importance="high" />
+	</Target>
+
+	<Target Name="ttt2" AfterTargets="Build" Condition="$(UnoRuntimeIdentifier)!='browserwasm'"  >
+		<Message Text="msbuild !browserwasm ==== $(MSBuildProjectFullPath)" Importance="high" />
+		<Message Text="msbuild !browserwasm ==== $(UnoRuntimeIdentifier) " Importance="high" />
+	</Target>
+</Project>

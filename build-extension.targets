@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Target Name="ResolvePrepareUnoRuntimeProjectReferences" AfterTargets="Build" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))==''">
+		<!--<ItemGroup>
+			<ExtProjectReference Include="$(MSBuildProjectName).browserwasm.csproj" UnoRuntimeIdentifier="browserwasm" />
+			<ExtProjectReference Include="$(MSBuildProjectName).desktop.csproj" UnoRuntimeIdentifier="desktop" />
+		</ItemGroup>
+
+		<MSBuild Projects="@(ExtProjectReference)" 
+				 BuildInParallel="true"
+				 Properties="Configuration=$(Configuration);Platform=$(Platform);TargetFramework=$(TargetFramework);AssemblyName=$(MSBuildProjectName);OutDir=bin\debug\ext\%(UnoRuntimeIdentifier)">
+			<Output TaskParameter="TargetOutputs" ItemName="UnoRuntimeProjectReferenceOutput" />
+		</MSBuild>-->
+
+		<ItemGroup>
+			<ExtProjectReference Include="$(MSBuildProjectName).browserwasm.csproj"  UnoRuntimeIdentifier="browserwasm" />
+			<ExtProjectReference Include="$(MSBuildProjectName).desktop.csproj" UnoRuntimeIdentifier="desktop"  />
+		</ItemGroup>
+
+		<MSBuild Projects="@(ExtProjectReference)"
+				 BuildInParallel="true"
+				 Properties="Configuration=$(Configuration);Platform=$(Platform);TargetFramework=$(TargetFramework);AssemblyName=$(MSBuildProjectName).%(UnoRuntimeIdentifier);OutDir=bin\debug\%(UnoRuntimeIdentifier)">
+			<Output TaskParameter="TargetOutputs" ItemName="ExtProjectReferenceOut" />
+		</MSBuild>
+
+		<ItemGroup>
+			<ExtProjectReferenceOut Update="@(ExtProjectReferenceOut)">
+				<Pack>true</Pack>
+				<PackagePath>uno-runtime/%(UnoRuntimeIdentifier)</PackagePath>
+			</ExtProjectReferenceOut>
+
+			<ExtProjectReferenceOut
+				Include="@(ExtProjectReferenceOut->'%(rootdir)%(directory)%(filename).pdb')"
+				Condition="exists('%(rootdir)%(directory)%(filename).pdb')">
+				<Pack>true</Pack>
+				<PackagePath>uno-runtime/%(UnoRuntimeIdentifier)</PackagePath>
+			</ExtProjectReferenceOut>
+			
+		</ItemGroup>
+
+		<ItemGroup>
+			<TfmSpecificPackageFile Include="@(ExtProjectReferenceOut)" />
+		</ItemGroup>
+
+
+		<Message Text="msbuild ==== @(ExtProjectReference) identity:  '%(Identity)'" Importance="high" />
+	</Target>
+</Project>

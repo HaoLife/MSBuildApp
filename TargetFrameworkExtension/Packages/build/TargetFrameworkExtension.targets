@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Target Name="ReplaceUnoRuntime"
+				Condition="'$(UnoRuntimeIdentifier)'!=''"
+				BeforeTargets="_ComputeResolvedCopyLocalPublishAssets;ResolveLockFileCopyLocalFiles;ComputeFilesToPublish;GeneratePublishDependencyFile">
+
+		<ItemGroup>
+			<UnoRuntimeEnabledPackage Include="$(MSBuildThisFileName)"  PackageBasePath="$(MSBuildThisFileDirectory).." />
+		</ItemGroup>
+
+		<ItemGroup>
+
+			<_RuntimeCopyLocalItemsToRemove Include="@(RuntimeCopyLocalItems)" EnabledIdentity="%(UnoRuntimeEnabledPackage.Identity)" />
+			<_RuntimeCopyLocalItemsToRemove Remove="@(_RuntimeCopyLocalItemsToRemove)" Condition="'%(_RuntimeCopyLocalItemsToRemove.NuGetPackageId)' != '%(_RuntimeCopyLocalItemsToRemove.EnabledIdentity)'" />
+
+			<RuntimeCopyLocalItems Remove="@(_RuntimeCopyLocalItemsToRemove)" />
+
+			<_UnoRuntimeEnabledPackage_EmptyPackageBasePath
+				Include="@(UnoRuntimeEnabledPackage)"
+				Condition="'%(UnoRuntimeEnabledPackage.PackageBasePath)'==''" />
+
+			<RuntimeCopyLocalItemsMerged
+							Include="%(UnoRuntimeEnabledPackage.PackageBasePath)/uno-runtime/$(UnoRuntimeIdentifier.ToLowerInvariant())/*.dll"
+							NuGetPackageId="%(UnoRuntimeEnabledPackage.Identity)" />
+
+
+			<RuntimeCopyLocalItemsToUpdate
+				Include="@(RuntimeCopyLocalItemsMerged)"
+				AssetType="runtime"
+				CopyLocal="true"
+				DestinationSubPath="%(FileName)%(Extension)"
+				CopyToPublishDirectory="true"
+				PathInPackage="uno-runtime/$(UnoRuntimeIdentifier.ToLowerInvariant())/%(FileName).$(UnoRuntimeIdentifier)%(Extension)" />
+
+			<!--<ReferenceCopyLocalPaths Include="%(UnoRuntimeEnabledPackage.PackageBasePath)/../uno-runtime/$(UnoRuntimeIdentifier.ToLowerInvariant())/*.pdb" />
+			<ReferenceCopyLocalPaths Include="%(UnoRuntimeEnabledPackage.PackageBasePath)/uno-runtime/$(UnoRuntimeIdentifier.ToLowerInvariant())/*.pdb" />-->
+
+
+			<RuntimeCopyLocalItems
+				Include="@(RuntimeCopyLocalItemsToUpdate)"/>
+		</ItemGroup>
+
+		
+
+		<Message Text="UnoRuntimeEnabledPackage ========== %(UnoRuntimeEnabledPackage.Identity)"  Importance="high"  />
+		<Message Text="path ========== %(UnoRuntimeEnabledPackage.PackageBasePath)/uno-runtime/$(UnoRuntimeIdentifier.ToLowerInvariant())/*.dll"  Importance="high"  />
+		<Message Text="path ========== $(MSBuildThisFileDirectory)"  Importance="high"  />
+		<Message Text="RuntimeCopyLocalItemsMerged ========== %(RuntimeCopyLocalItemsMerged.Identity)"  Importance="high"  />
+	</Target>
+</Project>

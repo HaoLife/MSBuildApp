@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;</TargetFrameworks>
+		<!--<TargetFrameworks>net8.0;net8.0-desktop;net8.0-browserwasm;net8.0-ios;</TargetFrameworks>-->
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="PackageSource" Version="1.0.0" />
+		<PackageReference Include="TargetFrameworkExtension" Version="1.0.0" />
+	</ItemGroup>
+	
+	<Target Name="build1" AfterTargets="Build">
+		<Message Text="project -------  '$(TestRuntime)'" Importance="high" />
+	</Target>
+	
+
+    <PropertyGroup>
+        <Value1>$([MSBuild]::GetTargetFrameworkIdentifier('net5.0-windows7.0'))</Value1>
+        <Value2>$([MSBuild]::GetTargetFrameworkVersion('net5.0-windows7.0'))</Value2>
+        <Value3>$([MSBuild]::GetTargetPlatformIdentifier('net5.0-windows7.0'))</Value3>
+        <Value4>$([MSBuild]::GetTargetPlatformVersion('net5.0-windows7.0'))</Value4>
+        <Value5>$([MSBuild]::IsTargetFrameworkCompatible('net5.0-windows', 'net5.0'))</Value5>
+        <Value6>$([MSBuild]::IsTargetFrameworkCompatible('net5.0', 'net6.0'))</Value6>
+        <Value7>$([MSBuild]::IsTargetFrameworkCompatible('net5.0', 'net8.0'))</Value7>
+        <Value8>$([MSBuild]::IsTargetFrameworkCompatible('net8.0', 'net5.0'))</Value8>
+		<ext>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</ext>
+    </PropertyGroup>
+
+    <Target Name="MyTarget" AfterTargets="Build" Condition="$(TargetFramework)!=''">
+
+		<Message Text="===================TargetFramework = $(TargetFramework)==============================" Importance="high" />
+		
+		<Message Text="Value1 = $(Value1)" Importance="high" />
+		<Message Text="Value2 = $(Value2)" Importance="high" />
+		<Message Text="Value3 = $(Value3)" Importance="high" />
+		<Message Text="Value4 = $(Value4)" Importance="high" />
+		<Message Text="Value5 = $(Value5)" Importance="high" />
+		<Message Text="Value6 = $(Value6)" Importance="high" />
+		<Message Text="Value7 = $(Value7)" Importance="high" />
+		<Message Text="Value8 = $(Value8)" Importance="high" />
+		<Message Text="ext = $(ext)" Importance="high" />
+
+
+
+	</Target>
+
+	<Target Name="PrepareUnoRuntimeProjectReferences" BeforeTargets="BeforeBuild">
+
+
+		<ItemGroup>
+			<ProjectReference Include="%(UnoRuntimeProjectReference.Identity)">
+				<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+				<SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+				<UndefineProperties>TargetFramework</UndefineProperties>
+			</ProjectReference>
+		</ItemGroup>
+		
+		<Message Text="UnoRuntimeProjectReference = %(UnoRuntimeProjectReference.Identity)" Importance="high" />
+	</Target>
+
+	<PropertyGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == '' ">
+		<UnoRuntimeIdentifier>Desktop</UnoRuntimeIdentifier>
+	</PropertyGroup>
+
+</Project>
+

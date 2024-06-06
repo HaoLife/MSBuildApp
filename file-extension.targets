@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!--<PropertyGroup>
+		<ext>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</ext>
+	</PropertyGroup>
+	
+	<ItemGroup Condition="'$(ext)'!=''">
+
+		<None Include="**\*.*.cs" />
+		<Compile Remove="**\*.*.cs" />
+		<Compile Include="**\*.$(ext).cs" />
+	</ItemGroup>-->
+
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'browserwasm'">
+
+		<None Include="**\*.browserwasm.cs" Exclude="bin\**\*.browserwasm.cs;obj\**\*.browserwasm.cs" />
+		<Compile Remove="**\*.browserwasm.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'desktop'">
+
+		<None Include="**\*.desktop.cs" Exclude="bin\**\*.desktop.cs;obj\**\*.desktop.cs" />
+		<Compile Remove="**\*.desktop.cs" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'ios'">
+
+		<None Include="**\*.ios.cs" Exclude="bin\**\*.ios.cs;obj\**\*.ios.cs" />
+		<Compile Remove="**\*.ios.cs" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'android'">
+
+		<None Include="**\*.android.cs" Exclude="bin\**\*.android.cs;obj\**\*.android.cs" />
+		<Compile Remove="**\*.android.cs" />
+	</ItemGroup>
+</Project>

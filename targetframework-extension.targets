@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'desktop' ">
+
+		<IsDesktop>true</IsDesktop>
+		<UsingUnoCommonDesktopTargets>true</UsingUnoCommonDesktopTargets>
+		<UnoRuntimeIdentifier>Skia</UnoRuntimeIdentifier>
+
+		<!-- Enable the netx.0-desktop target -->
+		<TargetPlatformIdentifier>Desktop</TargetPlatformIdentifier>
+		<TargetFrameworkIdentifier>Desktop</TargetFrameworkIdentifier>
+		<TargetPlatformSupported>true</TargetPlatformSupported>
+		<TargetPlatformVersion>$([System.Text.RegularExpressions.Regex]::Match($(TargetFramework), '\d+.\d+'))</TargetPlatformVersion>
+
+		<SupportedOSPlatformVersion Condition=" $(SupportedOSPlatformVersion) == '' ">8.0</SupportedOSPlatformVersion>
+
+	</PropertyGroup>
+
+	<ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'desktop' ">
+		<SupportedPlatform Include="desktop" />
+		<SdkSupportedTargetPlatformVersion Include="$(TargetPlatformVersion)" />
+		<SdkSupportedTargetPlatformIdentifier Include="$(TargetPlatformIdentifier)" DisplayName="$(TargetPlatformIdentifier)" />
+	</ItemGroup>
+
+
+	<PropertyGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'browserwasm' ">
+		<IsBrowserWasm>true</IsBrowserWasm>
+		<UsingUnoCommonWasmTargets>true</UsingUnoCommonWasmTargets>
+		<UnoRuntimeIdentifier>WebAssembly</UnoRuntimeIdentifier>
+
+		<EnableDefaultWasmItems Condition="$(EnableDefaultWasmItems) == ''">false</EnableDefaultWasmItems>
+
+		<!-- Enable the netx.0-browserwasm target -->
+		<TargetPlatformIdentifier>BrowserWasm</TargetPlatformIdentifier>
+		<TargetFrameworkIdentifier>BrowserWasm</TargetFrameworkIdentifier>
+		<TargetPlatformSupported>true</TargetPlatformSupported>
+		<TargetPlatformVersion>$([System.Text.RegularExpressions.Regex]::Match($(TargetFramework), '\d+.\d+'))</TargetPlatformVersion>
+		<SupportedOSPlatformVersion Condition=" $(SupportedOSPlatformVersion) == '' ">8.0</SupportedOSPlatformVersion>
+
+		<OutputType Condition=" $(OutputType) == 'Exe' AND $(OutputType) != $(_InitialOutputType)">$([MSBuild]::ValueOrDefault('$(_InitialOutputType)', 'Library'))</OutputType>
+	</PropertyGroup>
+
+	<ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'browserwasm' ">
+		<SupportedPlatform Remove="@(SupportedPlatform)" />
+		<SupportedPlatform Include="browserwasm" />
+		<SdkSupportedTargetPlatformVersion Include="$(TargetPlatformVersion)" />
+		<SdkSupportedTargetPlatformIdentifier Include="browserwasm" DisplayName="BrowserWasm" />
+	</ItemGroup>
+
+
+</Project>

@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AssemblyName>TargetFrameworkExtension</AssemblyName>
+		<UnoRuntimeIdentifier>desktop</UnoRuntimeIdentifier>
+		<!-- <OutDir>bin\debug\$(TargetFramework)\$(UnoRuntimeIdentifier)</OutDir> -->
+	</PropertyGroup>
+
+	<ItemGroup>
+
+		<None Include="**\*.desktop.cs" Exclude="bin\**\*.desktop.cs;obj\**\*.desktop.cs"  Condition="$(UnoRuntimeIdentifier)!='desktop'" />
+		<Compile Remove="**\*.desktop.cs"  Condition="$(UnoRuntimeIdentifier)!='desktop'"  />
+		
+		<None Include="**\*.browserwasm.cs" Exclude="bin\**\*.browserwasm.cs;obj\**\*.browserwasm.cs"  Condition="$(UnoRuntimeIdentifier)!='browserwasm'" />
+		<Compile Remove="**\*.browserwasm.cs" Condition="$(UnoRuntimeIdentifier)!='browserwasm'"   />
+
+		<None Include="**\*.ios.cs" Exclude="bin\**\*.ios.cs;obj\**\*.ios.cs" Condition="$(UnoRuntimeIdentifier)!='ios'" />
+		<Compile Remove="**\*.ios.cs" Condition="$(UnoRuntimeIdentifier)!='ios'" />
+
+		<None Include="**\*.android.cs" Exclude="bin\**\*.android.cs;obj\**\*.android.cs" Condition="$(UnoRuntimeIdentifier)!='android'" />
+		<Compile Remove="**\*.android.cs" Condition="$(UnoRuntimeIdentifier)!='android'" />
+	</ItemGroup>
+
+	
+	<Target Name="ttt" AfterTargets="Build"  >
+		<Message Text="msbuild__ $(MSBuildProjectFullPath) ==== $(UnoRuntimeIdentifier) " Importance="high" />
+		<Message Text="cs $(UnoRuntimeIdentifier) ==== @(None) identity:  '%(Identity)'" Importance="high" />
+	</Target>
+
+	
+</Project>

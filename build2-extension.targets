@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CustomContentTarget</TargetsForTfmSpecificContentInPackage>
+	</PropertyGroup>
+	<Target Name="CustomContentTarget" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))=='browserwasm' or
+			$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))=='desktop'">
+		<ItemGroup>
+			<TfmSpecificPackageFile Include="$(OutputPath)*.*">
+				<PackagePath>uno-runtime\$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</PackagePath>
+			</TfmSpecificPackageFile>
+		</ItemGroup>
+		<Message Text="path ==== $(OutputPath)*.*" Importance="high" />
+	</Target>
+</Project>

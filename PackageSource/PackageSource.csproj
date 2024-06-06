@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net7.0;net7.0-ios;net7.0-android;net8.0;net8.0-ios;net8.0-android</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+  <ItemGroup>
+
+	  <!--
+	  <None Include="Packages\**\build\*.*" Pack="True" PackagePath="%(RecursiveDir)$(PackageId)%(Extension)" />
+	  <None Include="Packages\**\buildMultiTargeting\**\*.*" Pack="True" PackagePath="%(RecursiveDir)$(PackageId)%(Extension)" />
+	  <None Include="Packages\**\*.*" Exclude="Packages\build\*.*;Packages\buildMultiTargeting\**\*.*;" Pack="True" PackagePath="%(RecursiveDir)%(Filename)%(Extension)" />
+	  -->
+
+	  <None Include="Packages\**\*.*" Pack="True" PackagePath="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'android'">
+	  <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.6.1.8" />
+  </ItemGroup>
+
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'ios'">
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+	</ItemGroup>
+
+	
+</Project>
